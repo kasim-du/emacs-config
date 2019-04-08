@@ -144,6 +144,12 @@
 ;;powerline theme
 (powerline-default-theme)
 
+;awesome-tab
+(require 'awesome-tab)
+(awesome-tab-mode t)
+(global-set-key (kbd "M-<left>") (lambda () (interactive) (awesome-tab-backward-tab)))
+(global-set-key (kbd "M-<right>") (lambda () (interactive) (awesome-tab-forward-tab)))
+
 ;;ido mode
 (ido-mode t)
 
