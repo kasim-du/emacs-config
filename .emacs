@@ -162,6 +162,8 @@
 ;c/c++ mode
 (require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
+;;switch between header and source file
+(global-set-key (kbd "M-o") 'ff-find-other-file)
 
 ;ac-c-headers
 (require 'ac-c-headers)
