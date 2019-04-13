@@ -28,7 +28,7 @@
  '(display-time-mode t)
  '(package-selected-packages
    (quote
-    (elpy micgoline powerline exec-path-from-shell smex projectile)))
+    (elpy micgoline exec-path-from-shell smex projectile)))
  '(scroll-bar-mode nil)
  ;'(session-use-package t nil (session))
  '(tool-bar-mode nil)
@@ -142,6 +142,7 @@
 (color-theme-tm)
 
 ;;powerline theme
+(require 'powerline)
 (powerline-default-theme)
 
 ;awesome-tab
