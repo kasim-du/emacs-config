@@ -28,11 +28,13 @@
  '(display-time-mode t)
  '(package-selected-packages
    (quote
-    (elpy micgoline exec-path-from-shell smex projectile)))
+    (auto-complete elpy micgoline exec-path-from-shell smex projectile)))
  '(scroll-bar-mode nil)
- ;'(session-use-package t nil (session))
- '(tool-bar-mode nil)
- '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
+ '(session-use-package t nil (session))
+ '(tab-stop-list
+   (quote
+    (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
+ '(tool-bar-mode nil))
 
 (setq visible-bell t)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -162,6 +164,59 @@
 
 ;;font settings
 (set-frame-font "Inconsolata-16")
+
+;;scheme setting
+(autoload 'paredit-mode "paredit"
+  "Minor mode for pseudo-structurally editing Lisp code."
+  t)
+
+(require 'cmuscheme)
+(setq scheme-program-name "scheme")
+
+;; bypass the interactive question and start the default interpreter
+(defun scheme-proc ()
+  "Return the current Scheme process, starting one if necessary."
+  (unless (and scheme-buffer
+               (get-buffer scheme-buffer)
+               (comint-check-proc scheme-buffer))
+    (save-window-excursion
+      (run-scheme scheme-program-name)))
+  (or (scheme-get-process)
+      (error "No current process. See variable `scheme-buffer'")))
+
+
+(defun scheme-split-window ()
+  (cond
+   ((= 1 (count-windows))
+    (delete-other-windows)
+    (split-window-vertically (floor (* 0.68 (window-height))))
+    (other-window 1)
+    (switch-to-buffer "*scheme*")
+    (other-window 1))
+   ((not (find "*scheme*"
+               (mapcar (lambda (w) (buffer-name (window-buffer w)))
+                       (window-list))
+               :test 'equal))
+    (other-window 1)
+    (switch-to-buffer "*scheme*")
+    (other-window -1))))
+
+
+(defun scheme-send-last-sexp-split-window ()
+  (interactive)
+  (scheme-split-window)
+  (scheme-send-last-sexp))
+
+(defun scheme-send-definition-split-window ()
+  (interactive)
+  (scheme-split-window)
+  (scheme-send-definition))
+
+(add-hook 'scheme-mode-hook
+  (lambda ()
+    (paredit-mode 1)
+    (define-key scheme-mode-map (kbd "<f5>") 'scheme-send-last-sexp-split-window)
+    (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-definition-split-window)))
 
 ;;auto-complete
 (ac-config-default)
