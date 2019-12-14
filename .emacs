@@ -7,8 +7,8 @@
                     (not (gnutls-available-p))))
        (proto (if no-ssl "http" "https")))
   ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  ;;(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
@@ -28,7 +28,7 @@
  '(display-time-mode t)
  '(package-selected-packages
    (quote
-    (auto-complete elpy micgoline exec-path-from-shell smex projectile)))
+    (web-beautify json-mode neotree js2-mode auto-complete elpy micgoline exec-path-from-shell smex projectile)))
  '(scroll-bar-mode nil)
  '(session-use-package t nil (session))
  '(tab-stop-list
@@ -242,17 +242,37 @@
 (add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
 (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
 
+;;neotree
+;(add-to-list 'load-path "~/.emacs.d/site-lisp/neotree")
+;(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+
+;;elpy package: emacs lisp python environment
+;(elpy-enable)
+
 ;yaml mode
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
-;;neotree
-;(add-to-list 'load-path "~/.emacs.d/site-lisp/neotree")
-;(require 'neotree)
-;(global-set-key [f8] 'neotree-toggle)
+;;web-beautify
+;(require 'web-beautify) ;; Not necessary if using ELPA package
+(eval-after-load 'js2-mode
+  '(define-key js2-mode-map (kbd "C-c b") 'web-beautify-js))
+;; Or if you're using 'js-mode' (a.k.a 'javascript-mode')
+(eval-after-load 'js
+  '(define-key js-mode-map (kbd "C-c b") 'web-beautify-js))
 
-;;elpy package: emacs lisp python environment
-;(elpy-enable)
+(eval-after-load 'json-mode
+  '(define-key json-mode-map (kbd "C-c b") 'web-beautify-js))
+
+(eval-after-load 'sgml-mode
+  '(define-key html-mode-map (kbd "C-c b") 'web-beautify-html))
+
+(eval-after-load 'web-mode
+  '(define-key web-mode-map (kbd "C-c b") 'web-beautify-html))
+
+(eval-after-load 'css-mode
+  '(define-key css-mode-map (kbd "C-c b") 'web-beautify-css))
 
 ;;json-snatcher
 ;(require 'json-snatcher)
@@ -279,3 +299,4 @@
 ;flycheck
 ;jedi
 ;helm
+
